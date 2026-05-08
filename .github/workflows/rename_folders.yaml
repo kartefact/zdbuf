@@ -1,0 +1,39 @@
+name: rename_folders
+# ONE-TIME: Run manually to move src/00_deps→00, src/01_core→01, src/02_ui→02
+# Then delete this file.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rename_folders:
+    if: github.repository == 'kartefact/zdbuf'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Move source folders
+      run: |
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config user.name "github-actions[bot]"
+
+        # Move 01_core -> 01
+        git mv src/01_core/* src/01/
+        rmdir src/01_core
+
+        # Move 02_ui -> 02
+        git mv src/02_ui/* src/02/
+        rmdir src/02_ui
+
+        # Remove old 00_deps (now replaced by src/00)
+        git rm -r src/00_deps
+
+        git commit -m "refactor: rename src/01_core->src/01, src/02_ui->src/02, remove src/00_deps"
+        git push
