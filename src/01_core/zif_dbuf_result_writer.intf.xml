@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+    <VSEOINTERF>
+      <CLSNAME>ZIF_DBUF_RESULT_WRITER</CLSNAME>
+      <LANGU>E</LANGU>
+      <DESCRIPT>zdbuf: Result Writer Interface</DESCRIPT>
+      <EXPOSURE>2</EXPOSURE>
+      <STATE>1</STATE>
+      <UNICODE>X</UNICODE>
+    </VSEOINTERF>
+  </asx:values>
+</asx:abap>
