@@ -23,8 +23,9 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git config user.name "github-actions[bot]"
 
-        # Remove existing target stubs so git mv has clean destinations
-        rm -rf src/01 src/02
+        # Remove tracked stubs from index AND filesystem
+        if [ -d src/01 ]; then git rm -r src/01; fi
+        if [ -d src/02 ]; then git rm -r src/02; fi
 
         # Move entire directories
         git mv src/01_core src/01
