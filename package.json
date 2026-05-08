@@ -1,0 +1,11 @@
+{
+  "name": "zdbuf",
+  "description": "ABAP DB Upload Framework",
+  "version": "1.0.0",
+  "dependencies": {
+    "abap2xlsx": { "url": "https://github.com/abap2xlsx/abap2xlsx" }
+  },
+  "devDependencies": {
+    "@abaplint/cli": "^2.119.1"
+  }
+}
