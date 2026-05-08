@@ -34,3 +34,4 @@ jobs:
       with:
         title: mirror-abap2xlsx-update
         branch: mirror-abap2xlsx-update
+        token: ${{ secrets.PAT_GITHUB }}
