@@ -23,23 +23,12 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git config user.name "github-actions[bot]"
 
-        # Remove pre-created stubs so git mv has no conflicts
-        git rm src/01/package.devc.xml
-        git rm src/02/package.devc.xml
+        # Remove existing target stubs so git mv has clean destinations
+        rm -rf src/01 src/02
 
-        # Move 01_core -> 01
-        git mv src/01_core/package.devc.xml src/01/package.devc.xml
-        for f in src/01_core/*; do
-          [ -f "$f" ] && git mv "$f" "src/01/$(basename $f)"
-        done
-        git rm -r src/01_core 2>/dev/null || true
-
-        # Move 02_ui -> 02
-        git mv src/02_ui/package.devc.xml src/02/package.devc.xml
-        for f in src/02_ui/*; do
-          [ -f "$f" ] && git mv "$f" "src/02/$(basename $f)"
-        done
-        git rm -r src/02_ui 2>/dev/null || true
+        # Move entire directories
+        git mv src/01_core src/01
+        git mv src/02_ui src/02
 
         # Remove old 00_deps (replaced by src/00)
         git rm -r src/00_deps
