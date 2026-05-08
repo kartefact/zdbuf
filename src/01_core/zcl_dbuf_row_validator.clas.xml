@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+    <VSEOCLASS>
+      <CLSNAME>ZCL_DBUF_ROW_VALIDATOR</CLSNAME>
+      <LANGU>E</LANGU>
+      <DESCRIPT>zdbuf: Row Type/Length Validator</DESCRIPT>
+      <STATE>1</STATE><CLSCCINCL>X</CLSCCINCL><FIXPT>X</FIXPT><UNICODE>X</UNICODE>
+    </VSEOCLASS>
+  </asx:values>
+</asx:abap>
