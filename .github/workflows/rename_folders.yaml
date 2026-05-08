@@ -20,19 +20,26 @@ jobs:
 
     - name: Move source folders
       run: |
+        set -e
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git config user.name "github-actions[bot]"
 
-        # Remove tracked stubs from index AND filesystem
-        if [ -d src/01 ]; then git rm -r src/01; fi
-        if [ -d src/02 ]; then git rm -r src/02; fi
+        # 1. Remove only the conflicting stub files, not whole dirs
+        git rm src/01/package.devc.xml || true
+        git rm src/02/package.devc.xml || true
 
-        # Move entire directories
-        git mv src/01_core src/01
-        git mv src/02_ui src/02
+        # 2. Ensure target dirs exist
+        mkdir -p src/01 src/02
 
-        # Remove old 00_deps (replaced by src/00)
-        git rm -r src/00_deps
+        # 3. Move contents of core/ui into numbered dirs
+        git mv src/01_core/* src/01/
+        rmdir src/01_core || true
+
+        git mv src/02_ui/* src/02/
+        rmdir src/02_ui || true
+
+        # 4. Remove old 00_deps (replaced by src/00)
+        git rm -r src/00_deps || true
 
         git status
         git commit -m "refactor: rename src/01_core->src/01, src/02_ui->src/02, remove src/00_deps"
