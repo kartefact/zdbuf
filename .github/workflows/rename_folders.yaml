@@ -1,13 +1,12 @@
 name: rename_folders
-# ONE-TIME: Run manually to move src/00_deps→00, src/01_core→01, src/02_ui→02
-# Then delete this file.
+# ONE-TIME: Run manually to move src/01_core->src/01, src/02_ui->src/02, remove src/00_deps
+# Delete this file after successful run.
 
 on:
   workflow_dispatch:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   rename_folders:
@@ -24,16 +23,27 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git config user.name "github-actions[bot]"
 
+        # Remove pre-created stubs so git mv has no conflicts
+        git rm src/01/package.devc.xml
+        git rm src/02/package.devc.xml
+
         # Move 01_core -> 01
-        git mv src/01_core/* src/01/
-        rmdir src/01_core
+        git mv src/01_core/package.devc.xml src/01/package.devc.xml
+        for f in src/01_core/*; do
+          [ -f "$f" ] && git mv "$f" "src/01/$(basename $f)"
+        done
+        git rm -r src/01_core 2>/dev/null || true
 
         # Move 02_ui -> 02
-        git mv src/02_ui/* src/02/
-        rmdir src/02_ui
+        git mv src/02_ui/package.devc.xml src/02/package.devc.xml
+        for f in src/02_ui/*; do
+          [ -f "$f" ] && git mv "$f" "src/02/$(basename $f)"
+        done
+        git rm -r src/02_ui 2>/dev/null || true
 
-        # Remove old 00_deps (now replaced by src/00)
+        # Remove old 00_deps (replaced by src/00)
         git rm -r src/00_deps
 
+        git status
         git commit -m "refactor: rename src/01_core->src/01, src/02_ui->src/02, remove src/00_deps"
         git push
