@@ -1,0 +1,24 @@
+name: auto_abaplint_fix_pr
+
+on:
+  pull_request:
+
+concurrency:
+  group: auto_abaplint_fix_pr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  auto_abaplint_fix_pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
+      with:
+        node-version: '20'
+        cache: 'npm'
+    - run: npm ci
+    - run: npx abaplint .github/abaplint/auto_abaplint_fix.jsonc

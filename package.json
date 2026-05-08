@@ -1,9 +1,18 @@
 {
   "name": "zdbuf",
-  "description": "ABAP DB Upload Framework",
+  "private": true,
   "version": "1.0.0",
-  "dependencies": {
-    "abap2xlsx": { "url": "https://github.com/abap2xlsx/abap2xlsx" }
+  "description": "ABAP DB Upload Framework",
+  "scripts": {
+    "auto_abaplint": "npx abaplint .github/abaplint/auto_abaplint_fix.jsonc --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartefact/zdbuf.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
   },
   "devDependencies": {
     "@abaplint/cli": "^2.119.1"

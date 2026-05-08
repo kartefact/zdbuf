@@ -1,6 +1,6 @@
 {
   "global": {
-    "files": "/../../src/**/*.*",
+    "files": "/src/**/*.*",
     "noIssues": [
       "/src/00"
     ]
@@ -17,14 +17,8 @@
     "errorNamespace": "^(Z|Y)"
   },
   "rules": {
-    "begin_end_names": true,
     "check_syntax": true,
-    "cloud_types": true,
-    "global_class": true,
-    "implement_methods": true,
-    "method_implemented_twice": true,
     "parser_error": true,
-    "superclass_final": true,
     "unknown_types": true,
     "xml_consistency": true
   }

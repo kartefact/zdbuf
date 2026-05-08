@@ -7,7 +7,7 @@
       <FOLDER_LOGIC>PREFIX</FOLDER_LOGIC>
       <IGNORE>
         <item>/.github/</item>
-        <item>/src/00_deps/</item>
+        <item>/src/00/</item>
       </IGNORE>
     </DATA>
   </asx:values>

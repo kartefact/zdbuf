@@ -1,0 +1,37 @@
+name: auto_abaplint_fix
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  auto_abaplint_fix:
+    if: github.repository == 'kartefact/zdbuf'
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: run transformation
+        run: |
+          npm ci
+          npm run auto_abaplint
+
+      - name: Open PR
+        uses: peter-evans/create-pull-request@v8
+        with:
+          title: abaplint-auto-fixes-formatting
+          branch: abaplint-auto-fixes-formatting
