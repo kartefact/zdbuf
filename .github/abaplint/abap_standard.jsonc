@@ -1,9 +1,6 @@
 {
   "global": {
-    "files": "/../../src/**/*.*",
-    "exclude": [
-      "/src/00/**/*.*"
-    ]
+    "files": "/../../src/**/*.*"
   },
   "dependencies": [
     {
@@ -18,6 +15,11 @@
   },
   "rules": {
     "begin_end_names": true,
+    "cds_parser_error": true,
+    "check_ddic": true,
+    "strict_sql": true,
+    "sql_escape_host_variables": true,
+    "check_include": true,
     "check_syntax": true,
     "cloud_types": true,
     "global_class": true,
