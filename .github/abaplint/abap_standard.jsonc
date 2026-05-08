@@ -1,6 +1,6 @@
 {
   "global": {
-    "files": "/../../src/**/*.*"
+    "files": "/../../src/{01,02}/**/*.*"
   },
   "dependencies": [
     {
