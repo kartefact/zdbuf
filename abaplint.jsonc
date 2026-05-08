@@ -1,9 +1,6 @@
 {
   "global": {
-    "files": "/src/**/*.*",
-    "noIssues": [
-      "/src/00"
-    ]
+    "files": "/src/{01,02}/**/*.*"
   },
   "dependencies": [
     {
