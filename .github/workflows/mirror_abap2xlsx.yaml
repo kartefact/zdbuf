@@ -1,0 +1,21 @@
+name: Mirror abap2xlsx
+on:
+  schedule:
+    - cron: '0 3 1 * *'
+  workflow_dispatch:
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone abap2xlsx
+        run: git clone --depth 1 https://github.com/abap2xlsx/abap2xlsx deps_tmp
+      - name: Update deps
+        run: |
+          rm -rf src/00_deps/*
+          cp -r deps_tmp/src/* src/00_deps/
+          rm -rf deps_tmp
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          title: 'chore: mirror abap2xlsx update'
+          branch: mirror/abap2xlsx

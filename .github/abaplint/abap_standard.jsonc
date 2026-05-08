@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.abaplint.org/schema.json",
+  "global": {
+    "files": "/src/**/*.*",
+    "exclude": ["/src/00_deps/**/*.*"],
+    "skipGeneratedGatewayClasses": true,
+    "skipGeneratedPersistentClasses": true,
+    "skipGeneratedFunctionGroups": true
+  },
+  "dependencies": [
+    {
+      "url": "https://github.com/abap2xlsx/abap2xlsx",
+      "folder": "/deps/abap2xlsx",
+      "files": "/src/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "v757",
+    "errorNamespace": "^(Z|Y)"
+  },
+  "rules": {
+    "allowed_object_types": true,
+    "check_syntax": true,
+    "clean_abap": true,
+    "comment_type": true,
+    "double_space": true,
+    "empty_statement": true,
+    "indentation": true,
+    "inline_data_old_versions": true,
+    "method_length": { "statements": 100 },
+    "no_chained_assignment": true,
+    "prefer_inline": true
+  }
+}
