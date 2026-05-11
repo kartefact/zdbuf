@@ -29,13 +29,16 @@ jobs:
       - name: Combine into single standalone program
         run: |
           mkdir -p combined
-          # Copy main program to src/ level so abapmerge scans 01/ and 02/ as subdirs
-          cp src/02/zdbuf_upload.prog.abap src/zdbuf_upload.prog.abap
+          # Build a flat staging dir: main prog + all class/intf files from src/01/
+          STAGE=$(mktemp -d)
+          cp src/02/zdbuf_upload.prog.abap "$STAGE/"
+          cp src/01/*.clas.abap "$STAGE/" 2>/dev/null || true
+          cp src/01/*.intf.abap "$STAGE/" 2>/dev/null || true
           abapmerge \
-            -f src/zdbuf_upload.prog.abap \
+            -f "$STAGE/zdbuf_upload.prog.abap" \
             -c zdbuf_standalone \
             -o combined/zdbuf_standalone.prog.abap
-          rm src/zdbuf_upload.prog.abap
+          rm -rf "$STAGE"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
