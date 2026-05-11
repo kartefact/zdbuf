@@ -30,9 +30,12 @@ jobs:
     - name: Combine into single standalone program
       run: |
         mkdir -p combined
+        # Run from src/ so abapmerge walks all subdirs (01/, 02/) to find classes
+        cd src
         abapmerge \
-          -f src/02/zdbuf_upload.prog.abap \
-          -o combined/zdbuf_standalone.prog.abap
+          -f 02/zdbuf_upload.prog.abap \
+          -c zdbuf_standalone \
+          -o ../combined/zdbuf_standalone.prog.abap
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v8
