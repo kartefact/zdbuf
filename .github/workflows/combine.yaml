@@ -30,12 +30,8 @@ jobs:
       - name: Combine into single standalone program
         run: |
           mkdir -p combined
-
-          abapmerge \
-            --main src/02/zdbuf_upload.prog.abap \
-            --output combined/zdbuf_standalone.prog.abap \
-            --pretty
-
+          abapmerge src/02/zdbuf_upload.prog.abap --output combined/zdbuf_standalone.prog.abap --pretty
+          
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
