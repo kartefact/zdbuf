@@ -6,6 +6,18 @@
     "version": "v757",
     "errorNamespace": "^(Z|Y)"
   },
+  "dependencies": [
+    {
+      "url": "https://github.com/abaplint/deps",
+      "folder": "/deps/abaplint",
+      "files": "/src/**/*.*"
+    },
+    {
+      "url": "https://github.com/abap2xlsx/abap2xlsx",
+      "folder": "/deps/abap2xlsx",
+      "files": "/src/**/*.*"
+    }
+  ],
   "rules": {
     "double_space": true,
     "indentation": true,
