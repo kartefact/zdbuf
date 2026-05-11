@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/abaplint/abaplint/main/packages/core/scripts/schema.json",
+  "global": {
+    "files": "/../../src/{01,02}/**/*.*"
+  },
+  "syntax": {
+    "version": "v757",
+    "errorNamespace": "^(Z|Y)"
+  },
+  "dependencies": [
+    {
+      "url": "https://github.com/abaplint/deps",
+      "folder": "/deps/abaplint",
+      "files": "/src/**/*.*"
+    },
+    {
+      "url": "https://github.com/abap2xlsx/abap2xlsx",
+      "folder": "/deps/abap2xlsx",
+      "files": "/src/**/*.{clas,intf,prog}.{abap,xml}"
+    }
+  ],
+  "rules": {
+    "unittest": true,
+    
+    // Same rules as abap_standard.jsonc
+    "begin_end_names": true,
+    "cds_parser_error": true,
+    "check_ddic": true,
+    "strict_sql": true,
+    "sql_escape_host_variables": true,
+    "check_include": true,
+    "check_syntax": true,
+    "cloud_types": true,
+    "global_class": true,
+    "implement_methods": true,
+    "method_implemented_twice": true,
+    "parser_error": true,
+    "superclass_final": true,
+    "unknown_types": true,
+    "xml_consistency": true
+  }
+}
