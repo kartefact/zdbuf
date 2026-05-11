@@ -15,10 +15,10 @@ CLASS zcl_dbuf_dsv_reader DEFINITION
       sep_at        TYPE c VALUE '@'.
 
     METHODS set_separator
-      IMPORTING separator TYPE c.
+      IMPORTING separator TYPE char1.
 
   PRIVATE SECTION.
-    DATA separator TYPE c VALUE ','.
+    DATA separator TYPE char1s VALUE ','.
 
     METHODS xstring_to_string
       IMPORTING

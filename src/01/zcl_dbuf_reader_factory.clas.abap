@@ -14,7 +14,7 @@ CLASS zcl_dbuf_reader_factory DEFINITION
     CLASS-METHODS create_for_extension
       IMPORTING
         extension     TYPE string
-        separator     TYPE c OPTIONAL
+        separator     TYPE char1 OPTIONAL
       RETURNING
         VALUE(result) TYPE REF TO zif_dbuf_file_reader.
 
@@ -22,7 +22,7 @@ CLASS zcl_dbuf_reader_factory DEFINITION
       IMPORTING
         extension     TYPE string
       RETURNING
-        VALUE(result) TYPE c.
+        VALUE(result) TYPE char1.
 
 ENDCLASS.
 

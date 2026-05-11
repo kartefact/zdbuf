@@ -13,7 +13,7 @@ INTERFACE zif_dbuf_db_committer
       table_name    TYPE tabname
       table_ref     TYPE REF TO data
     RETURNING
-      VALUE(result) TYPE commit_result
+      VALUE(result) TYPE char1ommit_result
     RAISING
       zcx_dbuf_validation_error.
 
