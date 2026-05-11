@@ -7,7 +7,7 @@
       <LANGU>E</LANGU>
       <DESCRIPT>zdbuf: File Error</DESCRIPT>
       <STATE>1</STATE>
-      <CLSCCINCL>X</CLSCCINCL>
+    <CATEGORY>3</CATEGORY>
       <FIXPT>X</FIXPT>
       <UNICODE>X</UNICODE>
     </VSEOCLASS>
