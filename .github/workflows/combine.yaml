@@ -15,37 +15,34 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: '20'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '20'
 
-    - name: Install abapmerge
-      run: npm install -g abapmerge
+      - name: Install abapmerge
+        run: npm install -g abapmerge
 
-    - name: Combine into single standalone program
-      run: |
-        mkdir -p combined
-        # Run from src/ so abapmerge walks all subdirs (01/, 02/) to find classes
-        cd src
-        abapmerge \
-          -f 02/zdbuf_upload.prog.abap \
-          -c zdbuf_standalone \
-          -o ../combined/zdbuf_standalone.prog.abap
+      - name: Combine into single standalone program
+        run: |
+          mkdir -p combined
+          # Copy main program to src/ level so abapmerge scans 01/ and 02/ as subdirs
+          cp src/02/zdbuf_upload.prog.abap src/zdbuf_upload.prog.abap
+          abapmerge \
+            -f src/zdbuf_upload.prog.abap \
+            -c zdbuf_standalone \
+            -o combined/zdbuf_standalone.prog.abap
+          rm src/zdbuf_upload.prog.abap
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v8
-      with:
-        branch: update/standalone-program
-        title: 'chore: update zdbuf_standalone.prog.abap (auto-generated)'
-        body: |
-          Automated update of the standalone combined program using `abapmerge`.
-
-          This PR was created automatically after changes to `main`.
-        commit-message: 'chore: update standalone program (auto-generated)'
-        delete-branch: true
-        base: main
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update standalone program'
+          branch: update/standalone-program
+          base: main
+          title: 'chore: update standalone program'
+          body: 'Automated update of standalone combined program.'
