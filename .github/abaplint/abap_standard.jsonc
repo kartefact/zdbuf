@@ -15,7 +15,7 @@
     {
       "url": "https://github.com/abap2xlsx/abap2xlsx",
       "folder": "/deps/abap2xlsx",
-      "files": "/src/**/*.*"
+      "files": "/src/**/*.{clas,intf,prog}.{abap,xml}"
     }
   ],
   "rules": {
