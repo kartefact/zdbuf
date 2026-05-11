@@ -1,0 +1,50 @@
+name: Combine into Single Program
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  combine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install abapmerge
+        run: npm install -g abapmerge
+
+      - name: Combine into single standalone program
+        run: |
+          mkdir -p combined
+
+          abapmerge \
+            --main src/02/zdbuf_upload.prog.abap \
+            --output combined/zdbuf_standalone.prog.abap \
+            --pretty
+
+      - name: Update combined branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git checkout -B combined
+
+          cp combined/zdbuf_standalone.prog.abap zdbuf_standalone.prog.abap
+
+          git add zdbuf_standalone.prog.abap
+          git commit -m "chore: update standalone program (auto-generated from main)" \
+            || echo "No changes"
+          
+          git push origin combined --force
