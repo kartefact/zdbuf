@@ -22,7 +22,6 @@ jobs:
       - name: Run abaplint Unit Tests
         uses: abaplint/actions-abaplint@main
         with:
-          config: .github/abaplint/test.jsonc
           version: '2.119.14'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
