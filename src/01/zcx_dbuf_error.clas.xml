@@ -2,15 +2,15 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-    <VSEOCLASS>
-      <CLSNAME>ZCX_DBUF_ERROR</CLSNAME>
-      <LANGU>E</LANGU>
-      <DESCRIPT>zdbuf: Base Exception</DESCRIPT>
-      <STATE>1</STATE>
-      <CLSCCINCL>X</CLSCCINCL>
-      <FIXPT>X</FIXPT>
-      <UNICODE>X</UNICODE>
-    </VSEOCLASS>
+   <VSEOCLASS>
+    <CLSNAME>ZCX_DBUF_ERROR</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>zdbuf: Base Exception</DESCRIPT>
+    <STATE>1</STATE>
+    <CATEGORY>3</CATEGORY>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
   </asx:values>
-</asx:abap>
+ </asx:abap>
 </abapGit>
