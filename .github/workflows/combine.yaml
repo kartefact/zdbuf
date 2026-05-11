@@ -31,9 +31,8 @@ jobs:
       run: |
         mkdir -p combined
         abapmerge \
-          src/02/zdbuf_upload.prog.abap \
-          --output combined/zdbuf_standalone.prog.abap \
-          --strict
+          -f src/02/zdbuf_upload.prog.abap \
+          -o combined/zdbuf_standalone.prog.abap
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v8
