@@ -3,7 +3,7 @@ name: auto_abaplint_fix
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1'   # Every Monday at midnight
 
 permissions:
   contents: read
@@ -11,27 +11,40 @@ permissions:
 jobs:
   auto_abaplint_fix:
     if: github.repository == 'kartefact/zdbuf'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     permissions:
       contents: write
       pull-requests: write
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
+        with:
+          # Required for create-pull-request to work properly
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: run transformation
-        run: |
-          npm ci
-          npm run auto_abaplint
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Open PR
+      - name: Run abaplint auto-fix
+        run: npm run auto_abaplint
+
+      - name: Create Pull Request with fixes
         uses: peter-evans/create-pull-request@v8
         with:
-          title: abaplint-auto-fixes-formatting
-          branch: abaplint-auto-fixes-formatting
+          title: 'chore: abaplint auto-fixes'
+          body: |
+            Automated abaplint fixes (formatting, quick fixes, etc.).
+            
+            This PR was created automatically by the weekly scheduled workflow.
+          branch: abaplint-auto-fixes
+          delete-branch: true
+          commit-message: 'chore: abaplint auto-fixes'
