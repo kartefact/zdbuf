@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "description": "ABAP DB Upload Framework",
   "scripts": {
+    "lint": "abaplint",
+    "lint:fix": "abaplint --fix",
     "auto_abaplint": "npx abaplint .github/abaplint/auto_abaplint_fix.jsonc --fix"
   },
   "repository": {
