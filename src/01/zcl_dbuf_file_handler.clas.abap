@@ -38,8 +38,8 @@ CLASS zcl_dbuf_file_handler IMPLEMENTATION.
 
     CALL FUNCTION 'SCMS_BINARY_TO_XSTRING'
       EXPORTING  input_length = file_length
-      IMPORTING  buffer       = result
-      TABLES     binary_tab   = binary_tab
+      IMPORTING buffer       = result
+      TABLES binary_tab   = binary_tab
       EXCEPTIONS OTHERS       = 1.
 
     IF sy-subrc <> 0.
