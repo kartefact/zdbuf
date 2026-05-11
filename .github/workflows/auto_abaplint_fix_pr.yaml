@@ -14,11 +14,14 @@ jobs:
   auto_abaplint_fix_pr:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-node@v5
-      with:
-        node-version: '20'
-        cache: 'npm'
-    - run: npm ci
-    - run: npx abaplint .github/abaplint/auto_abaplint_fix.jsonc
+      - uses: actions/checkout@v5
+
+      - name: Run abaplint (auto-fix config)
+        uses: abaplint/actions-abaplint@main
+        with:
+          config: .github/abaplint/auto_abaplint_fix.jsonc
+          version: '2.119.14'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
