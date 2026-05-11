@@ -6,7 +6,7 @@ CLASS zcl_dbuf_upload_processor DEFINITION
       BEGIN OF upload_params,
         file_path  TYPE string,
         table_name TYPE tabname,
-        separator  TYPE c,
+        separator  TYPE char1,
         has_header TYPE abap_bool,
         test_mode  TYPE abap_bool,
         out_format TYPE string,
