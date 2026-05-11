@@ -1,21 +1,28 @@
 name: ABAP_STANDARD
+
 on:
   pull_request:
-    concurrency:
-      group: ABAP_STANDARD-${{ github.ref }}
-      cancel-in-progress: true
   workflow_dispatch:
+
+concurrency:
+  group: ABAP_STANDARD-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
+
 jobs:
   ABAP_STANDARD:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-node@v5
-      with:
-        node-version: '20'
-        cache: 'npm'
-    - run: npm ci
-    - run: npx abaplint .github/abaplint/abap_standard.jsonc
+      - uses: actions/checkout@v5
+
+      - name: Run abaplint
+        uses: abaplint/actions-abaplint@main
+        with:
+          config: .github/abaplint/abap_standard.jsonc
+          version: '2.119.14'   # Pinned abaplint CLI version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
