@@ -4,13 +4,13 @@ REPORT zdbuf_upload.
 " Selection Screen
 "----------------------------------------------------------------------
 SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
-  PARAMETERS:
+PARAMETERS:
     p_file  TYPE string LOWER CASE OBLIGATORY,
     p_table TYPE tabname OBLIGATORY,
     p_sep   TYPE c DEFAULT ',',
     p_hdr   TYPE abap_bool AS CHECKBOX DEFAULT 'X',
     p_test  TYPE abap_bool AS CHECKBOX DEFAULT ' '.
-  PARAMETERS:
+PARAMETERS:
     p_fmt   TYPE c LENGTH 4 DEFAULT 'XLSX'.
 SELECTION-SCREEN END OF BLOCK b1.
 
@@ -41,8 +41,8 @@ START-OF-SELECTION.
 
       CALL FUNCTION 'SCMS_XSTRING_TO_BINARY'
         EXPORTING  buffer        = result_xstring
-        IMPORTING  output_length = file_length
-        TABLES     binary_tab    = binary_tab.
+        IMPORTING output_length = file_length
+        TABLES binary_tab    = binary_tab.
 
       cl_gui_frontend_services=>gui_download(
         EXPORTING
