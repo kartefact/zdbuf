@@ -1218,8 +1218,8 @@ START-OF-SELECTION.
 
 ****************************************************
 INTERFACE lif_abapmerge_marker.
-* abapmerge 0.16.8 - 2026-05-11T12:26:56.187Z
-  CONSTANTS c_merge_timestamp TYPE string VALUE `2026-05-11T12:26:56.187Z`.
+* abapmerge 0.16.8 - 2026-05-11T12:29:27.786Z
+  CONSTANTS c_merge_timestamp TYPE string VALUE `2026-05-11T12:29:27.786Z`.
   CONSTANTS c_abapmerge_version TYPE string VALUE `0.16.8`.
 ENDINTERFACE.
 ****************************************************
