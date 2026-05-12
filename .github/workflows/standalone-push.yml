@@ -1,0 +1,60 @@
+name: standalone — demerge & PR to main
+
+on:
+  push:
+    branches: [standalone]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  demerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout standalone
+        uses: actions/checkout@v4
+        with:
+          ref: standalone
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Checkout main into workspace
+        run: |
+          git fetch origin main
+          git checkout main
+          git checkout -
+
+      - name: Run demerge script
+        run: |
+          git checkout origin/main -- scripts/demerge.mjs
+          node scripts/demerge.mjs
+
+      - name: Create dev branch and push
+        id: branch
+        run: |
+          BRANCH="dev/$(date +'%Y%m%d-%H%M')"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -b $BRANCH origin/main
+          cp -r /tmp/zdbuf_demerged/. .
+          git add -A
+          git diff --staged --quiet || git commit -m "feat: demerged from standalone [skip ci]"
+          git push origin $BRANCH
+
+      - name: Create PR to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head ${{ steps.branch.outputs.branch }} \
+            --title "chore: sync demerged changes from standalone" \
+            --body "Auto-generated PR from standalone branch demerge. Review and merge to update global classes."

@@ -1,0 +1,57 @@
+name: main — lint, fix & build standalone
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lint-fix-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run abaplint auto-fix
+        run: npx abaplint --fix
+        continue-on-error: true
+
+      - name: Commit abaplint fixes (if any)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && git diff --staged --quiet || (
+            git add -A &&
+            git commit -m "fix(abaplint): auto-fix formatting [skip ci]"
+          )
+
+      - name: Push abaplint fixes back to main
+        run: git push origin main
+
+      - name: Build standalone program
+        run: node scripts/merge.mjs
+
+      - name: Push standalone to standalone branch
+        run: |
+          git fetch origin standalone
+          git checkout standalone
+          cp /tmp/zdbuf_standalone.prog.abap ./zdbuf_standalone.prog.abap
+          git add zdbuf_standalone.prog.abap
+          git diff --staged --quiet || (
+            git commit -m "chore(standalone): auto-build from main [skip ci]"
+          )
+          git push origin standalone
