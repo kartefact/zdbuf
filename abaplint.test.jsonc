@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/abaplint/abaplint/main/packages/core/scripts/schema.json",
   "global": {
-    "files": "/../../src/{01,02}/**/*.*"
+    "files": "/src/{01,02}/**/*.*"
   },
   "syntax": {
     "version": "v757",
