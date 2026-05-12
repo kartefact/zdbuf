@@ -1,0 +1,82 @@
+name: De-merge Standalone → Global Classes & Push to Dev
+
+on:
+  push:
+    paths:
+      - 'zdbuf_standalone.prog.abap'
+  workflow_dispatch:
+    inputs:
+      source_file:
+        description: 'Standalone ABAP file to de-merge'
+        required: false
+        default: 'zdbuf_standalone.prog.abap'
+
+jobs:
+  demerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Node (abaplint is already an npm dep) ───────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 3. Create / reset dev branch ──────────────────────────────────
+      - name: Create or reset dev branch
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin dev 2>/dev/null \
+            && git checkout dev \
+            && git merge --ff-only origin/main \
+            || git checkout -b dev
+
+      # ── 4. Run de-merge script ─────────────────────────────────────────
+      - name: De-merge standalone into global objects
+        run: |
+          node scripts/demerge.mjs \
+            --input "${{ github.event.inputs.source_file || 'zdbuf_standalone.prog.abap' }}" \
+            --output-classes src/01 \
+            --output-prog    src/02
+
+      # ── 5. Lint generated files ────────────────────────────────────────
+      - name: Run abaplint
+        run: npx abaplint abaplint.test.jsonc
+
+      # ── 6. Commit & push to dev ────────────────────────────────────────
+      - name: Commit generated files
+        run: |
+          git add src/01/ src/02/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: de-merge standalone → global classes [skip ci]
+
+          Source: ${{ github.event.inputs.source_file || 'zdbuf_standalone.prog.abap' }}
+          Run:    ${{ github.run_id }}"
+            git push origin dev
+          fi
+
+      # ── 7. Job summary ─────────────────────────────────────────────────
+      - name: Post job summary
+        if: always()
+        run: |
+          echo "## De-merge Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Parse standalone | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| abaplint validation | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Pushed to \`dev\` | ✅ |" >> $GITHUB_STEP_SUMMARY
