@@ -50,7 +50,8 @@ CLASS ltcl_test IMPLEMENTATION.
 
   METHOD explicit_sep_overrides.
     DATA(r) = zcl_dbuf_reader_factory=>create_for_extension(
-      extension = 'csv' separator = ';' ).
+      extension = 'csv'
+      separator = ';' ).
     cl_abap_unit_assert=>assert_not_initial( act = r ).
   ENDMETHOD.
 

@@ -49,9 +49,12 @@ CLASS zcl_dbuf_reader_factory IMPLEMENTATION.
 
   METHOD separator_for_extension.
     CASE to_upper( extension ).
-      WHEN ext_tsv. result = cl_abap_char_utilities=>horizontal_tab.
-      WHEN ext_psv. result = '|'.
-      WHEN OTHERS.  result = ','.
+      WHEN ext_tsv.
+        result = cl_abap_char_utilities=>horizontal_tab.
+      WHEN ext_psv.
+        result = '|'.
+      WHEN OTHERS.
+        result = ','.
     ENDCASE.
   ENDMETHOD.
 

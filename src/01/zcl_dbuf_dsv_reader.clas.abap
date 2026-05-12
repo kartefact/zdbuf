@@ -56,9 +56,15 @@ CLASS zcl_dbuf_dsv_reader IMPLEMENTATION.
     DATA(sheet) = VALUE zif_dbuf_file_reader=>sheet( name = 'Sheet1' ).
 
     LOOP AT lines INTO DATA(line).
-      line = replace( val = line sub = cl_abap_char_utilities=>cr_lf of = '' ).
-      line = replace( val = line sub = cl_abap_char_utilities=>newline of = '' ).
-      IF line IS INITIAL. CONTINUE. ENDIF.
+      line = replace( val = line
+                      sub = cl_abap_char_utilities=>cr_lf
+                      of  = '' ).
+      line = replace( val = line
+                      sub = cl_abap_char_utilities=>newline
+                      of  = '' ).
+      IF line IS INITIAL.
+        CONTINUE.
+      ENDIF.
 
       DATA(row) = VALUE zif_dbuf_file_reader=>row( cells = tokenize_line( line ) ).
       APPEND row TO sheet-rows.
@@ -69,8 +75,8 @@ CLASS zcl_dbuf_dsv_reader IMPLEMENTATION.
 
   METHOD xstring_to_string.
     DATA(conv) = cl_abap_conv_in_ce=>create(
-      input    = xdata
-      encoding = 'UTF-8'
+      input       = xdata
+      encoding    = 'UTF-8'
       ignore_cerr = abap_true ).
     conv->read( IMPORTING data = result ).
   ENDMETHOD.
@@ -78,7 +84,9 @@ CLASS zcl_dbuf_dsv_reader IMPLEMENTATION.
   METHOD strip_bom.
     DATA(bom) = cl_abap_char_utilities=>byte_order_mark_utf8.
     IF result CS bom.
-      result = replace( val = raw sub = bom of = '' ).
+      result = replace( val = raw
+                        sub = bom
+                        of  = '' ).
     ELSE.
       result = raw.
     ENDIF.

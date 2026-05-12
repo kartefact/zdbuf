@@ -11,8 +11,8 @@ CLASS zcl_dbuf_xlsx_reader IMPLEMENTATION.
     TRY.
         reader->load_data( EXPORTING iv_data = file_content CHANGING io_excel = excel ).
       CATCH cx_root INTO DATA(exc).
-        RAISE EXCEPTION TYPE zcx_dbuf_file_error
-          EXPORTING text = |XLSX read failed: { exc->if_message~get_text( ) }| previous = exc.
+        RAISE EXCEPTION NEW zcx_dbuf_file_error( text     = |XLSX read failed: { exc->if_message~get_text( ) }|
+                                                 previous = exc ).
     ENDTRY.
     DATA(iterator) = excel->get_worksheets_iterator( ).
     WHILE iterator->has_next( ) = abap_true.
@@ -25,7 +25,8 @@ CLASS zcl_dbuf_xlsx_reader IMPLEMENTATION.
         DATA(row_entry) = VALUE zif_dbuf_file_reader=>row( ).
         DO max_col TIMES.
           DATA(col) = zcl_excel_common=>convert_column2alpha( sy-index ).
-          ws->get_cell( EXPORTING ip_column = col ip_row = r IMPORTING ep_value = DATA(cv) ).
+          ws->get_cell( EXPORTING ip_column = col
+                                  ip_row = r IMPORTING ep_value = DATA(cv) ).
           APPEND CONV string( cv ) TO row_entry-cells.
         ENDDO.
         APPEND row_entry TO sheet-rows.

@@ -55,9 +55,9 @@ CLASS zcl_dbuf_upload_processor DEFINITION
 
     METHODS fill_dynamic_row
       IMPORTING
-        row_ref    TYPE REF TO data
-        cells      TYPE string_table
-        mappings   TYPE zcl_dbuf_column_mapper=>column_mappings.
+        row_ref  TYPE REF TO data
+        cells    TYPE string_table
+        mappings TYPE zcl_dbuf_column_mapper=>column_mappings.
 
 ENDCLASS.
 
@@ -77,7 +77,8 @@ CLASS zcl_dbuf_upload_processor IMPLEMENTATION.
     DATA(result_rows)  = parse_and_process( file_content ).
 
     DATA(writer) = zcl_dbuf_writer_factory=>create( ms_params-out_format ).
-    result_xstring = writer->write( table_name = ms_params-table_name rows = result_rows ).
+    result_xstring = writer->write( table_name = ms_params-table_name
+                                    rows       = result_rows ).
   ENDMETHOD.
 
   METHOD read_file.
@@ -96,41 +97,43 @@ CLASS zcl_dbuf_upload_processor IMPLEMENTATION.
   METHOD parse_and_process.
     DATA(extension) = get_extension( ).
     DATA(reader)    = zcl_dbuf_reader_factory=>create_for_extension(
-      extension = extension separator = ms_params-separator ).
+      extension = extension
+      separator = ms_params-separator ).
 
     DATA(sheets) = reader->read(
       file_content = file_content
       has_header   = ms_params-has_header ).
+    DATA header_tokens TYPE string_table.
+    FIELD-SYMBOLS <table> TYPE STANDARD TABLE.
 
     IF sheets IS INITIAL.
-      RAISE EXCEPTION TYPE zcx_dbuf_file_error
-        EXPORTING text = 'File contains no parseable sheets'.
+      RAISE EXCEPTION NEW zcx_dbuf_file_error( text = 'File contains no parseable sheets' ).
     ENDIF.
 
     DATA(rows) = sheets[ 1 ]-rows.
     IF rows IS INITIAL.
-      RAISE EXCEPTION TYPE zcx_dbuf_file_error
-        EXPORTING text = 'File sheet is empty'.
+      RAISE EXCEPTION NEW zcx_dbuf_file_error( text = 'File sheet is empty' ).
     ENDIF.
 
     DATA(start_row) = 2.
-    DATA header_tokens TYPE string_table.
+
 
     IF ms_params-has_header = abap_true.
       header_tokens = rows[ 1 ]-cells.
     ELSE.
       start_row = 1.
-      SELECT fieldname FROM dd03l INTO TABLE @header_tokens
+      SELECT fieldname FROM dd03l
         WHERE tabname = @ms_params-table_name AND as4local = 'A'
-          AND fieldname NOT LIKE '.%' ORDER BY position.
+          AND fieldname NOT LIKE '.%' ORDER BY position INTO TABLE @header_tokens.
     ENDIF.
 
     DATA(mappings)   = mo_mapper->map_headers(
-      table_name = ms_params-table_name header_row = header_tokens ).
+      table_name = ms_params-table_name
+      header_row = header_tokens ).
     DATA(table_ref)  = build_dynamic_table( mappings ).
     DATA(committer)  = zcl_dbuf_committer_factory=>create( ms_params-test_mode ).
 
-    FIELD-SYMBOLS <table> TYPE STANDARD TABLE.
+
     ASSIGN table_ref->* TO <table>.
 
     DATA(row_idx) = start_row.
@@ -144,30 +147,35 @@ CLASS zcl_dbuf_upload_processor IMPLEMENTATION.
       IF vr-is_valid = abap_false.
         APPEND VALUE zif_dbuf_result_writer=>result_row(
           row_number = row_idx status = 'E' message = vr-message
-          raw_data   = concat_lines_of( table = data_row-cells sep = ',' )
-        ) TO result.
+          raw_data   = concat_lines_of( table = data_row-cells
+                                        sep   = ',' )
+          ) TO result.
         row_idx = row_idx + 1.
         CONTINUE.
       ENDIF.
 
       CREATE DATA DATA(row_ref) LIKE LINE OF <table>.
-      fill_dynamic_row( row_ref = row_ref cells = data_row-cells mappings = mappings ).
+      fill_dynamic_row( row_ref  = row_ref
+                        cells    = data_row-cells
+                        mappings = mappings ).
       INSERT row_ref->* INTO TABLE <table>.
 
       APPEND VALUE zif_dbuf_result_writer=>result_row(
         row_number = row_idx status = 'S' message = 'OK'
-        raw_data   = concat_lines_of( table = data_row-cells sep = ',' )
-      ) TO result.
+        raw_data   = concat_lines_of( table = data_row-cells
+                                      sep   = ',' )
+        ) TO result.
       row_idx = row_idx + 1.
     ENDLOOP.
 
-    committer->commit( table_name = ms_params-table_name table_ref = table_ref ).
+    committer->commit( table_name = ms_params-table_name
+                       table_ref  = table_ref ).
   ENDMETHOD.
 
   METHOD build_dynamic_table.
     DATA(struct_desc) = cl_abap_structdescr=>describe_by_name( ms_params-table_name ).
     DATA(table_type)  = cl_abap_tabledescr=>create(
-      p_line_type = struct_desc
+      p_line_type  = struct_desc
       p_table_kind = cl_abap_tabledescr=>tablekind_std
       p_unique     = abap_false ).
     CREATE DATA result TYPE HANDLE table_type.

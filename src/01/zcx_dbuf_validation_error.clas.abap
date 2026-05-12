@@ -14,6 +14,7 @@ ENDCLASS.
 
 CLASS zcx_dbuf_validation_error IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( text = text previous = previous ).
+    super->constructor( text     = text
+                        previous = previous ).
   ENDMETHOD.
 ENDCLASS.

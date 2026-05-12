@@ -34,8 +34,7 @@ CLASS zcl_dbuf_column_mapper IMPLEMENTATION.
 
   METHOD map_headers.
     IF header_row IS INITIAL.
-      RAISE EXCEPTION TYPE zcx_dbuf_mapping_error
-        EXPORTING text = |Header row is empty for table { table_name }|.
+      RAISE EXCEPTION NEW zcx_dbuf_mapping_error( text = |Header row is empty for table { table_name }| ).
     ENDIF.
 
     DATA(ddic_fields) = get_ddic_fields( table_name ).
@@ -53,17 +52,15 @@ CLASS zcl_dbuf_column_mapper IMPLEMENTATION.
     ENDLOOP.
 
     IF result IS INITIAL.
-      RAISE EXCEPTION TYPE zcx_dbuf_mapping_error
-        EXPORTING text =
-          |No header tokens matched DDIC fields of { table_name }. Check column names.|.
+      RAISE EXCEPTION NEW zcx_dbuf_mapping_error( text = |No header tokens matched DDIC fields of { table_name }. Check column names.| ).
     ENDIF.
   ENDMETHOD.
 
   METHOD get_ddic_fields.
-    SELECT fieldname FROM dd03l INTO TABLE @result
+    SELECT fieldname FROM dd03l
       WHERE tabname  = @table_name
         AND as4local = 'A'
-        AND fieldname NOT LIKE '.%'.
+        AND fieldname NOT LIKE '.%' INTO TABLE @result.
   ENDMETHOD.
 
 ENDCLASS.

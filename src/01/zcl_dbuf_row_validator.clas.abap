@@ -49,10 +49,12 @@ CLASS zcl_dbuf_row_validator IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      DATA(field_def) = get_field_metadata( table_name = table_name field_name = mapping-field_name ).
+      DATA(field_def) = get_field_metadata( table_name = table_name
+                                            field_name = mapping-field_name ).
 
       IF field_def-fieldname IS NOT INITIAL.
-        IF check_length( value = cell_value field_def = field_def ) = abap_false.
+        IF check_length( value     = cell_value
+                         field_def = field_def ) = abap_false.
           result-is_valid = abap_false.
           result-message  = |Row { row_index }: Value "{ cell_value }" exceeds max length |
                          && |{ field_def-leng } for field { mapping-field_name }|.
@@ -63,10 +65,10 @@ CLASS zcl_dbuf_row_validator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_field_metadata.
-    SELECT SINGLE * FROM dd03l INTO @result
+    SELECT SINGLE * FROM dd03l
       WHERE tabname   = @table_name
         AND fieldname = @field_name
-        AND as4local  = 'A'.
+        AND as4local  = 'A' INTO @result.
   ENDMETHOD.
 
   METHOD check_length.

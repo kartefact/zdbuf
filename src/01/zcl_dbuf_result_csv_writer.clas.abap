@@ -10,16 +10,20 @@ CLASS zcl_dbuf_result_csv_writer IMPLEMENTATION.
     DATA(output) = |Row#,Status,Message,Raw Data{ nl }|.
 
     LOOP AT rows INTO DATA(row).
-      DATA(msg)  = replace( val = row-message  sub = ',' of = ';' ).
-      DATA(data) = replace( val = row-raw_data sub = ',' of = ';' ).
+      DATA(msg)  = replace( val = row-message
+                            sub = ','
+                            of  = ';' ).
+      DATA(data) = replace( val = row-raw_data
+                            sub = ','
+                            of  = ';' ).
       output = output && |{ row-row_number },{ row-status },{ msg },{ data }{ nl }|.
     ENDLOOP.
 
     TRY.
         result = cl_abap_codepage=>convert_from( output ).
       CATCH cx_root INTO DATA(exc).
-        RAISE EXCEPTION TYPE zcx_dbuf_file_error
-          EXPORTING text = |CSV encode failed: { exc->if_message~get_text( ) }| previous = exc.
+        RAISE EXCEPTION NEW zcx_dbuf_file_error( text     = |CSV encode failed: { exc->if_message~get_text( ) }|
+                                                 previous = exc ).
     ENDTRY.
   ENDMETHOD.
 ENDCLASS.

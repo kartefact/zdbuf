@@ -25,26 +25,25 @@ CLASS zcl_dbuf_file_handler IMPLEMENTATION.
     DATA file_length TYPE i.
 
     cl_gui_frontend_services=>gui_upload(
-      EXPORTING filename = file_path filetype = 'BIN'
+      EXPORTING filename = file_path
+                filetype = 'BIN'
       IMPORTING filelength = file_length
       CHANGING  data_tab   = binary_tab
       EXCEPTIONS file_open_error = 1 file_read_error = 2
                  no_batch = 3 gui_refuse_filetransfer = 4 OTHERS = 5 ).
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_dbuf_file_error
-        EXPORTING text = |Cannot open file: { file_path } (SY-SUBRC={ sy-subrc })|.
+      RAISE EXCEPTION NEW zcx_dbuf_file_error( text = |Cannot open file: { file_path } (SY-SUBRC={ sy-subrc })| ).
     ENDIF.
 
     CALL FUNCTION 'SCMS_BINARY_TO_XSTRING'
       EXPORTING  input_length = file_length
-      IMPORTING buffer       = result
-      TABLES binary_tab   = binary_tab
+      IMPORTING buffer        = result
+      TABLES binary_tab       = binary_tab
       EXCEPTIONS OTHERS       = 1.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_dbuf_file_error
-        EXPORTING text = |Binary conversion failed for: { file_path }|.
+      RAISE EXCEPTION NEW zcx_dbuf_file_error( text = |Binary conversion failed for: { file_path }| ).
     ENDIF.
   ENDMETHOD.
 

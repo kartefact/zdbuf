@@ -18,10 +18,12 @@ CLASS ltcl_test IMPLEMENTATION.
 
   METHOD empty_header_raises_error.
     TRY.
-        cut->map_headers( table_name = 'ZTESTXXX' header_row = VALUE #( ) ).
+        cut->map_headers( table_name = 'ZTESTXXX'
+                          header_row = VALUE #( ) ).
         cl_abap_unit_assert=>fail( 'Empty header must raise mapping error' ).
       CATCH zcx_dbuf_mapping_error INTO DATA(exc).
-        cl_abap_unit_assert=>assert_char_cp( act = exc->mv_text exp = '*empty*' ).
+        cl_abap_unit_assert=>assert_char_cp( act = exc->mv_text
+                                             exp = '*empty*' ).
     ENDTRY.
   ENDMETHOD.
 

@@ -47,13 +47,12 @@ CLASS zcl_dbuf_auth_checker IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    RAISE EXCEPTION TYPE zcx_dbuf_auth_error
-      EXPORTING text = |Not authorized to change table { table_name }|.
+    RAISE EXCEPTION NEW zcx_dbuf_auth_error( text = |Not authorized to change table { table_name }| ).
   ENDMETHOD.
 
   METHOD get_auth_group.
-    SELECT SINGLE cclass FROM tddat INTO @result
-      WHERE tabname = @table_name.
+    SELECT SINGLE cclass FROM tddat
+      WHERE tabname = @table_name INTO @result.
   ENDMETHOD.
 
   METHOD check_by_group.

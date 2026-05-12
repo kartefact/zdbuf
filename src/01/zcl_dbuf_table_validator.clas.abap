@@ -30,13 +30,11 @@ CLASS zcl_dbuf_table_validator IMPLEMENTATION.
 
   METHOD validate.
     IF is_custom_namespace( table_name ) = abap_false.
-      RAISE EXCEPTION TYPE zcx_dbuf_validation_error
-        EXPORTING text = |Table { table_name } is not in Z* or Y* namespace|.
+      RAISE EXCEPTION NEW zcx_dbuf_validation_error( text = |Table { table_name } is not in Z* or Y* namespace| ).
     ENDIF.
 
     IF exists_in_ddic( table_name ) = abap_false.
-      RAISE EXCEPTION TYPE zcx_dbuf_validation_error
-        EXPORTING text = |Table { table_name } not found in DDIC as transparent table|.
+      RAISE EXCEPTION NEW zcx_dbuf_validation_error( text = |Table { table_name } not found in DDIC as transparent table| ).
     ENDIF.
   ENDMETHOD.
 
@@ -46,10 +44,10 @@ CLASS zcl_dbuf_table_validator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD exists_in_ddic.
-    SELECT SINGLE tabname FROM dd02l INTO @DATA(found)
+    SELECT SINGLE tabname FROM dd02l
       WHERE tabname  = @table_name
         AND tabclass = 'TRANSP'
-        AND as4local = 'A'.
+        AND as4local = 'A' INTO @DATA(found).
     result = xsdbool( sy-subrc = 0 AND found IS NOT INITIAL ).
   ENDMETHOD.
 
